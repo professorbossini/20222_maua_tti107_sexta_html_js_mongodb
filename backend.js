@@ -1,7 +1,11 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 // aplicar um middleware
 app.use(express.json())
+//aplicamos mais um middleware
+app.use(cors())
+
 
 // let e const
 let filmes = [
