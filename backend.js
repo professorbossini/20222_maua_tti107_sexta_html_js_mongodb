@@ -1,6 +1,7 @@
 const bcrypt = require ('bcrypt')
 const cors = require('cors')
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const mongoose = require ('mongoose')
 const uniqueValidator = require ('mongoose-unique-validator')
 
@@ -93,25 +94,16 @@ app.post('/signup', async (req, res) => {
 
 //POST localhost:3000/login
 app.post('/login', async (req, res) => {
-  //1. pegar usuário e senha da requisição
-  // const login = req.body.login
-  // const password = req.body.password
-  //operador de desestruturação do JS
   const {login, password} = req.body
-  //2. Verificar, no MongoDB, se o usuário existe
-  //equivalente a SELECT * FROM tb_usuario WHERE login = login;
   const u = await Usuario.findOne({login: login})
-  //3. Se existe, comparo a senha que foi enviada com aquela existente na base (lembrando que a senha na base está criptografada)
-  //4. Se a senha estiver OK, responder 200
-  //5. Se o usuário não existe, responder 401
   if (!u){
     return res.status(401).json({mensagem: "login inválido"})
   }
-  console.log(password, u.password)
   const senhaValida = await bcrypt.compare(password, u.password)
   if (!senhaValida)
     return res.status(401).json({mensagem: "senha inválida"})
-  res.status(200).json()
+  const token = jwt.sign({login: login}, 'chave-secreta', {expiresIn: '1h'})  
+  res.status(200).json({token})
 })
 
 // arrow function

@@ -1,6 +1,7 @@
 const protocolo = 'http'
 const baseURL = 'localhost:3000'
 const filmesEndpoint = '/filmes'
+const cadastroUsuarioEndpoint = '/signup'
 
 async function obterFilmes() {
   const urlCompleta = `${protocolo}://${baseURL}${filmesEndpoint}`
@@ -48,7 +49,7 @@ async function cadastrarFilme(){
     }, 2000)
 
   }
+}
 
-
-
+async function cadastrarUsuario() {
 }
