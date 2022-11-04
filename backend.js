@@ -1,8 +1,10 @@
-const express = require('express')
+const bcrypt = require ('bcrypt')
 const cors = require('cors')
-const app = express()
+const express = require('express')
 const mongoose = require ('mongoose')
 const uniqueValidator = require ('mongoose-unique-validator')
+
+const app = express()
 // aplicar um middleware
 app.use(express.json())
 //aplicamos mais um middleware
@@ -70,16 +72,46 @@ app.get('/filmes', async (req, res) => {
 })
 
 app.post('/signup', async (req, res) => {
-  //1. extrair login e senha da req
-  const login = req.body.login
-  const password = req.body.password
-  //2. construir um objeto Usuario usando o modelo da Mongoose
-  const usuario = new Usuario({login, password})
-  //3. chamar o método save sobre o objeto construtor
-  const respMongo = await usuario.save()
-  console.log(respMongo)
-  //4. encerrar o tratamento da requisição
-  res.end()
+  try{
+    //1. extrair login e senha da req
+    const login = req.body.login
+    const password = req.body.password
+    const senhaCriptografada = await bcrypt.hash(password, 10)
+    //2. construir um objeto Usuario usando o modelo da Mongoose
+    const usuario = new Usuario({login, password: senhaCriptografada})
+    //3. chamar o método save sobre o objeto construtor
+    const respMongo = await usuario.save()
+    console.log(respMongo)
+    //4. encerrar o tratamento da requisição
+    res.status(201).end()
+  }
+  catch (erro){
+    console.log('Erro', erro)
+    res.status(409).end()
+  }
+})
+
+//POST localhost:3000/login
+app.post('/login', async (req, res) => {
+  //1. pegar usuário e senha da requisição
+  // const login = req.body.login
+  // const password = req.body.password
+  //operador de desestruturação do JS
+  const {login, password} = req.body
+  //2. Verificar, no MongoDB, se o usuário existe
+  //equivalente a SELECT * FROM tb_usuario WHERE login = login;
+  const u = await Usuario.findOne({login: login})
+  //3. Se existe, comparo a senha que foi enviada com aquela existente na base (lembrando que a senha na base está criptografada)
+  //4. Se a senha estiver OK, responder 200
+  //5. Se o usuário não existe, responder 401
+  if (!u){
+    return res.status(401).json({mensagem: "login inválido"})
+  }
+  console.log(password, u.password)
+  const senhaValida = await bcrypt.compare(password, u.password)
+  if (!senhaValida)
+    return res.status(401).json({mensagem: "senha inválida"})
+  res.status(200).json()
 })
 
 // arrow function
