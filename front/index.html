@@ -9,7 +9,52 @@
   </head>
   <body onload="obterFilmes()">
 
-    
+    <!-- .modal.fade#modalCadastro -->
+    <div 
+      class="modal fade"
+      id="modalCadastro"
+      aria-labelledby="modalCadastro"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- h1.modal-title.fs-5{Cadastro de usuário} -->
+            <h1 class="modal-title fs-5">Cadastro de usuário</h1>
+          </div>
+          <div class="modal-body">
+            <div 
+              class="d-none alert alert-dismissable fade alert-modal-cadastro"
+              role="alert">
+            </div>
+            <form>
+              <div class="mb-3">
+                <!-- label[for=usuarioCadastroInput].col-form-label{Usuário} -->
+                <label for="usuarioCadastroInput" class="col-form-label">Usuário</label>
+                <input type="text" id="usuarioCadastroInput" class="form-control">
+              </div>
+              <div class="mb-3">
+                <!-- label[for=passwordCadastroInput].col-form-label{Senha} -->
+                <label for="passwordCadastroInput" class="col-form-label">Senha</label>
+                <!-- input[type=password]#passwordCadastroInput.form-control -->
+                <input type="password" id="passwordCadastroInput" class="form-control">
+              </div>
+            </form>
+          </div>
+          <!-- metodologia CSS BEM -->
+          <div class="modal-footer">
+            <button data-bs-dismiss="modal" type="button" class="btn btn-secondary">Cancelar</button>
+            <button 
+              type="button" 
+              class="btn btn-primary"
+              onclick="cadastrarUsuario()">
+                Cadastrar
+              </button>  
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- .container -->
     <div class="container">
@@ -34,7 +79,13 @@
                 <div class="navbar-nav ms-auto">
                   <a href="#" aria-current="page" class="nav-link active me-2">Login</a>
                   <!-- a.nav-link.m-2[href=#]{Novo usuário} -->
-                  <a href="#" class="nav-link me-2">Novo usuário</a>
+                  <a 
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalCadastro"
+                    class="nav-link me-2">
+                      Novo usuário
+                  </a>
                 </div>
 
               </div>
