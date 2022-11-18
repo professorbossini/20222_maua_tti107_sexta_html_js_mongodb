@@ -9,6 +9,56 @@
   </head>
   <body onload="obterFilmes()">
 
+  <div
+    class="modal fade"
+    id="modalLogin"
+    aria-labelledby="modalLogin"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Login</h1>
+        </div>
+        <div class="modal-body">
+          <!-- .d-none.alert.alert-dismissible.fade.alert-modal-login -->
+          <div 
+            class="d-none alert alert-dismissible fade alert-modal-login"
+            role="alert">
+
+          </div>
+          <form>
+            <div class="mb-3">
+              <label for="usuarioLoginInput" class="col-form-label">
+                Usuário
+              </label>
+              <input type="text" class="form-control" id="usuarioLoginInput">
+            </div>
+            <div class="mb-3">
+              <label for="passwordLoginInput" class="col-form-label">
+                Senha
+              </label>
+              <input type="text" class="form-control" id="passwordLoginInput">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            onclick="fazerLogin()">
+              Login
+            </button>
+        </div>   
+      </div>      
+    </div>
+  </div>
+
     <!-- .modal.fade#modalCadastro -->
     <div 
       class="modal fade"
@@ -77,7 +127,15 @@
               <!-- .collapse.navbar-collapse#myNav -->
               <div class="collapse navbar-collapse" id="myNav">
                 <div class="navbar-nav ms-auto">
-                  <a href="#" aria-current="page" class="nav-link active me-2">Login</a>
+                  <a
+                    id="loginLink"
+                    href="#"
+                    aria-current="page"
+                    class="nav-link active me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalLogin">
+                      Login
+                  </a>
                   <!-- a.nav-link.m-2[href=#]{Novo usuário} -->
                   <a 
                     href="#"
@@ -98,13 +156,8 @@
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <div class="d-none fade alert alert-danger alert-dismissible" role="alert">
-            Preencha todos os campos
-            <button 
-              type="button" 
-              class="btn-close"
-              data-bs-dismiss="alert">
-            </button>
+          <div class="d-none fade alert alert-dismissible alert-filme" role="alert">
+            
           </div>  
         </div>
       </div>
@@ -134,7 +187,13 @@
       <div class="row justify-content-center">
         <div class="col-md-8">
           <!-- button.btn.btn-outline-primary{Cadastrar} -->
-          <button onclick="cadastrarFilme()" class="btn btn-outline-primary w-100">Cadastrar</button>
+          <button
+            id="cadastrarFilmeButton" 
+            onclick="cadastrarFilme()" 
+            class="btn btn-outline-primary w-100"
+            disabled>
+              Cadastrar
+            </button>
         </div>
       </div>
 

@@ -92,6 +92,8 @@ app.post('/signup', async (req, res) => {
   }
 })
 
+//GET: https://localhost:3000/login?login=joao&password=123456
+
 //POST localhost:3000/login
 app.post('/login', async (req, res) => {
   const {login, password} = req.body

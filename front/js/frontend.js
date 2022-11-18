@@ -2,6 +2,7 @@ const protocolo = 'http'
 const baseURL = 'localhost:3000'
 const filmesEndpoint = '/filmes'
 const cadastroUsuarioEndpoint = '/signup'
+const loginEndpoint = '/login'
 
 async function obterFilmes() {
   const urlCompleta = `${protocolo}://${baseURL}${filmesEndpoint}`
@@ -38,15 +39,17 @@ async function cadastrarFilme() {
       celulaTitulo.innerHTML = filme.titulo
       celulaSinopse.innerHTML = filme.sinopse
     }
+    exibirAlerta('.alert-filme', 'Filme cadastrado com sucesso', ['show', 'alert-success'], ['d-none'], 2000)
   }
   else {
-    let alert = document.querySelector('.alert')
-    alert.classList.add('show')
-    alert.classList.remove('d-none')
-    setTimeout(() => {
-      alert.classList.remove('show')
-      alert.classList.add('d-none')
-    }, 2000)
+    exibirAlerta(
+      '.alert-filme', 
+      'Preencha todos os campos',
+      ['show', 'alert-danger'],
+      ['d-none'],
+      2000
+    )
+
 
   }
 }
@@ -67,9 +70,12 @@ async function cadastrarUsuario() {
       usuarioCadastroInput.value = ""
       passwordCadastroInput.value = ""
       exibirAlerta('.alert-modal-cadastro', "Usuário cadastrado com sucesso", ['show', 'alert-success'], ['d-none'], 2000)
+      ocultarModal('#modalCadastro', 2000)
     }
     catch (erro) {
       exibirAlerta('.alert-modal-cadastro', "Erro ao cadastrar usuário", ['show', 'alert-danger'], ['d-none'], 2000)
+      ocultarModal('#modalCadastro', 2000)
+      
     }
   }
   else {
@@ -88,4 +94,68 @@ function exibirAlerta(seletor, conteudo, classesAAdicionar, classeARemover, time
     alert.classList.remove('show')
     alert.classList.add('d-none')
   }, timeout)
+}
+
+//arrow function
+const ocultarModal = (seletor, timeout) => {
+  //setTimeout é uma função de alta ordem
+  //programação funcional
+  setTimeout(() => {
+    const modal = bootstrap.Modal.getInstance(
+      document.querySelector(seletor)
+    )
+    modal.hide()
+  }, timeout)  
+}
+
+const fazerLogin = async () => {
+  //fazer referência ao input em que o usuário digita o login
+  const usuarioLoginInput = document.querySelector('#usuarioLoginInput')
+  //fazer referência ao input em que o usuário digita a senha
+  const passwordLoginInput = document.querySelector('#passwordLoginInput')
+  //pegar o login digitado
+  const usuarioLogin = usuarioLoginInput.value
+  //pegar a senha digitada
+  const passwordLogin = passwordLoginInput.value
+  //usuário digitou os dois valores?
+  if (usuarioLogin && passwordLogin){
+    try{
+      const URLCompleta = `${protocolo}://${baseURL}${loginEndpoint}`
+      const resposta = (await axios.post(URLCompleta, {login: usuarioLogin, password: passwordLogin})).data
+      console.log(resposta)
+      usuarioLoginInput.value = ''
+      passwordLoginInput.value = ''
+      exibirAlerta(
+        '.alert-modal-login',
+        'Login efetuado com sucesso',
+        ['show', 'alert-success'],
+        ['d-none'],
+        2000
+      )
+      ocultarModal('#modalLogin', 2000)
+      const cadastrarFilmeButton = 
+        document.querySelector('#cadastrarFilmeButton')
+      cadastrarFilmeButton.disabled = false
+      const loginLink = document.querySelector('#loginLink')
+      loginLink.innerHTML = `Olá, ${usuarioLogin}! Fazer Logoff!`
+    }
+    catch (erro){
+      exibirAlerta(
+        '.alert-modal-login',
+        'Erro ao fazer login',
+        ['show', 'alert-danger'],
+        ['d-none'],
+        2000
+      )
+    }
+  }
+  else{
+    exibirAlerta(
+        '.alert-modal-login',
+        'Preencha todos os campos',
+        ['show', 'alert-danger'],
+        ['d-none'],
+        2000
+    )
+  }
 }
